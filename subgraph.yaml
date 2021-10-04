@@ -1,0 +1,41 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: wOHM
+    network: mainnet
+    source:
+      address: "0x383518188c0c6d7730d91b2c03a03c837814a899"
+      abi: wOHM
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - OwnershipTransferred
+        - TWAPEpochChanged
+        - TWAPOracleChanged
+        - TWAPSourceAdded
+        - TWAPSourceRemoved
+        - Transfer
+      abis:
+        - name: wOHM
+          file: ./abis/wOHM.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: TWAPEpochChanged(uint256,uint256)
+          handler: handleTWAPEpochChanged
+        - event: TWAPOracleChanged(indexed address,indexed address)
+          handler: handleTWAPOracleChanged
+        - event: TWAPSourceAdded(indexed address)
+          handler: handleTWAPSourceAdded
+        - event: TWAPSourceRemoved(indexed address)
+          handler: handleTWAPSourceRemoved
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/mapping.ts
