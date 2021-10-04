@@ -1,6 +1,12 @@
-type ExampleEntity @entity {
+type Transfer @entity {
   id: ID!
-  count: BigInt!
-  owner: Bytes! # address
-  spender: Bytes! # address
+  from: Bytes
+  to: Bytes
+  amount: BigInt
+}
+
+type Balance @entity {
+  id: ID!
+  address: Bytes
+  ohmBalance: BigDecimal
 }
