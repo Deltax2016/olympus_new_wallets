@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, log } from '@graphprotocol/graph-ts'
+import { Address, BigDecimal, BigInt, log, Bytes } from '@graphprotocol/graph-ts'
 import {
   wOHM,
   Approval,
@@ -6,8 +6,11 @@ import {
 } from "../generated/wOHM/wOHM"
 //import { ExampleEntity } from "../generated/schema"
 import { Transfer as TransferOHM } from '../generated/schema'
+import { createWallet } from './utils/wallets'
+
 import { Balance } from '../generated/schema'
 import {SOHM_ERC20_CONTRACT, OHM_ERC20_CONTRACT} from './utils/Constants'
+
 
 /*
 export function handleApproval(event: Approval): void {
@@ -28,8 +31,9 @@ export function handleApproval(event: Approval): void {
 
 export function handleTransfer(event: Transfer): void {
   let entity = TransferOHM.load(event.transaction.hash.toHex())
-  let balances_from = createWallet(event.params.from)
-  let balances_to = createWallet(event.params.to)
+  log.debug('Event timestamp {} ', [event.transaction.hash.toString()])
+  let bTo = createWallet(event.params.from, event.block.timestamp)
+  let bFrom = createWallet(event.params.to, event.block.timestamp)
 
   if (!entity) {
     entity = new TransferOHM(event.transaction.hash.toHex())
@@ -40,24 +44,6 @@ export function handleTransfer(event: Transfer): void {
   entity.amount = event.params.value
   entity.save()
 
-
-}
-
-function createWallet(address: Address): Balance {
-
-  let entity = Balance.load(address.toHex())
-
-  if (!entity) {
-    entity = new Balance(address.toHex())
-  }
-
-  let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
-
-  entity.ohmBalance = toDecimal(ohmContract.balanceOf(Address.fromString(entity.id.toString())),9)
-  entity.address = address
-  entity.save()
-
-  return entity as Balance
 }
 
 function toDecimal(

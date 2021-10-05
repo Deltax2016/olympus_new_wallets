@@ -94,6 +94,23 @@ export class Transfer extends Entity {
       this.set("amount", Value.fromBigInt(<BigInt>value));
     }
   }
+
+  get timestamp(): BigInt | null {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt | null) {
+    if (!value) {
+      this.unset("timestamp");
+    } else {
+      this.set("timestamp", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
 export class Balance extends Entity {
@@ -159,6 +176,40 @@ export class Balance extends Entity {
       this.unset("ohmBalance");
     } else {
       this.set("ohmBalance", Value.fromBigDecimal(<BigDecimal>value));
+    }
+  }
+
+  get sohmBalance(): BigDecimal | null {
+    let value = this.get("sohmBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set sohmBalance(value: BigDecimal | null) {
+    if (!value) {
+      this.unset("sohmBalance");
+    } else {
+      this.set("sohmBalance", Value.fromBigDecimal(<BigDecimal>value));
+    }
+  }
+
+  get timestamp(): BigInt | null {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt | null) {
+    if (!value) {
+      this.unset("timestamp");
+    } else {
+      this.set("timestamp", Value.fromBigInt(<BigInt>value));
     }
   }
 }

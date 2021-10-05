@@ -3,10 +3,14 @@ type Transfer @entity {
   from: Bytes
   to: Bytes
   amount: BigInt
+  timestamp: BigInt
 }
 
 type Balance @entity {
   id: ID!
   address: Bytes
   ohmBalance: BigDecimal
+  sohmBalance: BigDecimal
+  timestamp: BigInt
+
 }
