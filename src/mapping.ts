@@ -2,32 +2,30 @@ import { Address, BigDecimal, BigInt, log, Bytes } from '@graphprotocol/graph-ts
 import {
   wOHM,
   Approval,
-  Transfer
+  Transfer,
+  MintCall
 } from "../generated/wOHM/wOHM"
 //import { ExampleEntity } from "../generated/schema"
 import { Transfer as TransferOHM } from '../generated/schema'
 import { createWallet } from './utils/wallets'
-
-import { Balance } from '../generated/schema'
+import { Balance, Mint } from '../generated/schema'
 import {SOHM_ERC20_CONTRACT, OHM_ERC20_CONTRACT} from './utils/Constants'
 
 
-/*
-export function handleApproval(event: Approval): void {
 
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
+export function handleMint(call: MintCall): void {
+  let entity = Mint.load(call.transaction.hash.toHex())
 
   if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-    entity.count = BigInt.fromI32(0)
+    entity = new Mint(call.transaction.hash.toHex())
   }
 
-  entity.count = entity.count + BigInt.fromI32(1)
-  entity.owner = event.params.owner
-  entity.spender = event.params.spender
+  entity.address = call.inputs.account_
+  entity.value = call.inputs.amount_
   entity.save()
 
-}*/
+}
+
 
 export function handleTransfer(event: Transfer): void {
   let entity = TransferOHM.load(event.transaction.hash.toHex())
@@ -44,15 +42,4 @@ export function handleTransfer(event: Transfer): void {
   entity.amount = event.params.value
   entity.save()
 
-}
-
-function toDecimal(
-  value: BigInt,
-  decimals: number = DEFAULT_DECIMALS,
-): BigDecimal {
-  let precision = BigInt.fromI32(10)
-    .pow(<u8>decimals)
-    .toBigDecimal();
-
-  return value.divDecimal(precision);
 }

@@ -10,15 +10,21 @@ dataSources:
       abi: wOHM
       startBlock: 12112800
     mapping:
-      kind: ethereum/events
+      kind: ethereum/event
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
         - Transfer
+        - Mint
       abis:
         - name: wOHM
           file: ./abis/wOHM.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
+      callHandlers:
+        - function: mint(address,uint256)
+          handler: handleMint
       file: ./src/mapping.ts
+
+

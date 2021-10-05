@@ -12,5 +12,10 @@ type Balance @entity {
   ohmBalance: BigDecimal
   sohmBalance: BigDecimal
   timestamp: BigInt
+}
 
+type Mint @entity {
+  id: ID!
+  address: Bytes
+  value: BigInt
 }

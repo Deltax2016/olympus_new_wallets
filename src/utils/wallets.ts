@@ -7,7 +7,7 @@ import {
 
 export function createWallet(address: Bytes, timestamp: BigInt): Balance {
 
-  log.debug('Address {} timestamp {} id {}', [address.toString(), timestamp.toString()])
+  //log.debug('Address {} timestamp {} id {}', [address.toString(), timestamp.toString()])
 
   let entity = Balance.load(address.toHex())
 
