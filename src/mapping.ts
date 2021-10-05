@@ -30,8 +30,8 @@ export function handleMint(call: MintCall): void {
 export function handleTransfer(event: Transfer): void {
   let entity = TransferOHM.load(event.transaction.hash.toHex())
   log.debug('Event timestamp {} ', [event.transaction.hash.toString()])
-  let bTo = createWallet(event.params.from, event.block.timestamp)
-  let bFrom = createWallet(event.params.to, event.block.timestamp)
+  let bFrom = createWallet(event.params.from, event.block.timestamp, event.transaction.hash)
+  let bTo = createWallet(event.params.to, event.block.timestamp, event.transaction.hash)
 
   if (!entity) {
     entity = new TransferOHM(event.transaction.hash.toHex())

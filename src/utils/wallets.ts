@@ -5,21 +5,21 @@ import {
   wOHM
 } from "../../generated/wOHM/wOHM"
 
-export function createWallet(address: Bytes, timestamp: BigInt): Balance {
+export function createWallet(address: Bytes, timestamp: BigInt, id: Bytes): Balance {
 
   //log.debug('Address {} timestamp {} id {}', [address.toString(), timestamp.toString()])
 
-  let entity = Balance.load(address.toHex())
+  let entity = Balance.load(id.toHex())
 
   if (!entity) {
-    entity = new Balance(address.toHex())
+    entity = new Balance(id.toHex())
   }
 
   let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
   let sohmContract = wOHM.bind(Address.fromString(SOHM_ERC20_CONTRACT))
 
-  entity.ohmBalance = toDecimal(ohmContract.balanceOf(Address.fromString(entity.id.toString())),9)
-  entity.sohmBalance = toDecimal(sohmContract.balanceOf(Address.fromString(entity.id.toString())),9)
+  entity.ohmBalance = toDecimal(ohmContract.balanceOf(Address.fromString(address.toHex())),9)
+  entity.sohmBalance = toDecimal(sohmContract.balanceOf(Address.fromString(address.toHex())),9)
   entity.timestamp = timestamp
   entity.address = address
   entity.save()
