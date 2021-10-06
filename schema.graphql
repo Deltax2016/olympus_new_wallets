@@ -1,21 +1,44 @@
 type Transfer @entity {
+
   id: ID!
   from: Bytes
   to: Bytes
   amount: BigInt
   timestamp: BigInt
+
+}
+
+type Wallet @entity {
+  id: ID!
+  address: String
+  ohmBalance: BigInt
+  sohmBalance: BigInt
+  balances: [Balance!] @derivedFrom(field: "wallet")
+  birth: BigInt
 }
 
 type Balance @entity {
+
   id: ID!
-  address: Bytes
-  ohmBalance: BigDecimal
-  sohmBalance: BigDecimal
+  address: String
+  ohmBalance: BigInt
+  sohmBalance: BigInt
   timestamp: BigInt
+  wallet: Wallet!
+
 }
 
 type Mint @entity {
+
   id: ID!
   address: Bytes
   value: BigInt
+
+}
+
+type Minter @entity {
+
+  id: ID!
+  address: Bytes
+
 }

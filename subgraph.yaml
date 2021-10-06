@@ -25,6 +25,8 @@ dataSources:
       callHandlers:
         - function: mint(address,uint256)
           handler: handleMint
+        - function: setVault(address)
+          handler: handleSetVault
       file: ./src/mapping.ts
 
 

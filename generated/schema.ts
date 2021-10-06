@@ -113,10 +113,130 @@ export class Transfer extends Entity {
   }
 }
 
+export class Wallet extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Wallet entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Wallet entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Wallet", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Wallet | null {
+    return changetype<Wallet | null>(store.get("Wallet", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): string | null {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set address(value: string | null) {
+    if (!value) {
+      this.unset("address");
+    } else {
+      this.set("address", Value.fromString(<string>value));
+    }
+  }
+
+  get ohmBalance(): BigInt | null {
+    let value = this.get("ohmBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set ohmBalance(value: BigInt | null) {
+    if (!value) {
+      this.unset("ohmBalance");
+    } else {
+      this.set("ohmBalance", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get sohmBalance(): BigInt | null {
+    let value = this.get("sohmBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sohmBalance(value: BigInt | null) {
+    if (!value) {
+      this.unset("sohmBalance");
+    } else {
+      this.set("sohmBalance", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get balances(): Array<string> | null {
+    let value = this.get("balances");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set balances(value: Array<string> | null) {
+    if (!value) {
+      this.unset("balances");
+    } else {
+      this.set("balances", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get birth(): BigInt | null {
+    let value = this.get("birth");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set birth(value: BigInt | null) {
+    if (!value) {
+      this.unset("birth");
+    } else {
+      this.set("birth", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
 export class Balance extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
+
+    this.set("wallet", Value.fromString(""));
   }
 
   save(): void {
@@ -145,54 +265,54 @@ export class Balance extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get address(): Bytes | null {
+  get address(): string | null {
     let value = this.get("address");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set address(value: Bytes | null) {
+  set address(value: string | null) {
     if (!value) {
       this.unset("address");
     } else {
-      this.set("address", Value.fromBytes(<Bytes>value));
+      this.set("address", Value.fromString(<string>value));
     }
   }
 
-  get ohmBalance(): BigDecimal | null {
+  get ohmBalance(): BigInt | null {
     let value = this.get("ohmBalance");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBigDecimal();
+      return value.toBigInt();
     }
   }
 
-  set ohmBalance(value: BigDecimal | null) {
+  set ohmBalance(value: BigInt | null) {
     if (!value) {
       this.unset("ohmBalance");
     } else {
-      this.set("ohmBalance", Value.fromBigDecimal(<BigDecimal>value));
+      this.set("ohmBalance", Value.fromBigInt(<BigInt>value));
     }
   }
 
-  get sohmBalance(): BigDecimal | null {
+  get sohmBalance(): BigInt | null {
     let value = this.get("sohmBalance");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBigDecimal();
+      return value.toBigInt();
     }
   }
 
-  set sohmBalance(value: BigDecimal | null) {
+  set sohmBalance(value: BigInt | null) {
     if (!value) {
       this.unset("sohmBalance");
     } else {
-      this.set("sohmBalance", Value.fromBigDecimal(<BigDecimal>value));
+      this.set("sohmBalance", Value.fromBigInt(<BigInt>value));
     }
   }
 
@@ -211,6 +331,15 @@ export class Balance extends Entity {
     } else {
       this.set("timestamp", Value.fromBigInt(<BigInt>value));
     }
+  }
+
+  get wallet(): string {
+    let value = this.get("wallet");
+    return value!.toString();
+  }
+
+  set wallet(value: string) {
+    this.set("wallet", Value.fromString(value));
   }
 }
 
@@ -277,6 +406,56 @@ export class Mint extends Entity {
       this.unset("value");
     } else {
       this.set("value", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
+export class Minter extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Minter entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Minter entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Minter", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Minter | null {
+    return changetype<Minter | null>(store.get("Minter", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): Bytes | null {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set address(value: Bytes | null) {
+    if (!value) {
+      this.unset("address");
+    } else {
+      this.set("address", Value.fromBytes(<Bytes>value));
     }
   }
 }
