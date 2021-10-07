@@ -25,6 +25,7 @@ type Balance @entity {
   sohmBalance: BigInt
   timestamp: BigInt
   wallet: Wallet!
+  transfer: Transfer!
 
 }
 

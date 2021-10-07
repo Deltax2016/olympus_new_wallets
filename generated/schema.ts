@@ -237,6 +237,7 @@ export class Balance extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("wallet", Value.fromString(""));
+    this.set("transfer", Value.fromString(""));
   }
 
   save(): void {
@@ -340,6 +341,15 @@ export class Balance extends Entity {
 
   set wallet(value: string) {
     this.set("wallet", Value.fromString(value));
+  }
+
+  get transfer(): string {
+    let value = this.get("transfer");
+    return value!.toString();
+  }
+
+  set transfer(value: string) {
+    this.set("transfer", Value.fromString(value));
   }
 }
 

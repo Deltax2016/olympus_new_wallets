@@ -21,6 +21,7 @@ export function createBalance(address: Bytes, timestamp: BigInt, id: Bytes): Bal
   entity.sohmBalance = sohmContract.balanceOf(Address.fromString(address.toHex()))
   entity.timestamp = timestamp
   entity.address = address.toHex()
+  entity.transfer = id.toHex()
   entity.save()
 
   return entity as Balance
