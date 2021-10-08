@@ -13,7 +13,7 @@ type Wallet @entity {
   address: String
   ohmBalance: BigInt
   sohmBalance: BigInt
-  balances: [Balance!] @derivedFrom(field: "wallet")
+  dailyBalance: [DailyBalance!]! @derivedFrom(field: "wallet")
   birth: BigInt
 }
 
@@ -42,4 +42,35 @@ type Minter @entity {
   id: ID!
   address: Bytes
 
+}
+
+type totalSupply @entity {
+
+  id: ID!
+  totalWallets: BigInt!
+
+}
+
+type MinuteBalance @entity {
+  id: ID!
+  ohmBalance: BigInt!
+  hourBalance: HourBalance!
+  timestamp: BigInt
+}
+
+type HourBalance @entity {
+  id: ID!
+  ohmBalance: BigInt
+  minuteBalance: [MinuteBalance!] @derivedFrom(field: "hourBalance")
+  dailyBalance: DailyBalance!
+  timestamp: BigInt
+}
+
+type DailyBalance @entity {
+  id: ID!
+  ohmBalance: BigInt
+  hourBalance: [HourBalance!] @derivedFrom(field: "dailyBalance")
+  wallet: Wallet!
+  address: String
+  timestamp: BigInt
 }

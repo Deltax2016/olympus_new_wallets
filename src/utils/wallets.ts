@@ -1,5 +1,5 @@
 import { Address, BigDecimal, BigInt, log, Bytes } from '@graphprotocol/graph-ts'
-import { Balance, Wallet } from '../../generated/schema'
+import { Balance, Wallet, totalSupply, DailyBalance, HourBalance, MinuteBalance } from '../../generated/schema'
 import {SOHM_ERC20_CONTRACT, OHM_ERC20_CONTRACT} from './Constants'
 import {
   wOHM
@@ -28,6 +28,54 @@ export function createBalance(address: Bytes, timestamp: BigInt, id: Bytes): Bal
 
 }
 
+export function createDailyBalance(address: Bytes, timestamp: BigInt): DailyBalance {
+
+  let number:i64 =Number.parseInt(timestamp.toString(),10) as i64;
+  number*=1000;
+  const date: Date = new Date( number);
+
+  let entity = DailyBalance.load(`${address.toHex()}-${getNumberDayFromDate(date).toString()}`)
+
+  if (!entity) {
+    entity = new DailyBalance(`${address.toHex()}-${getNumberDayFromDate(date).toString()}`)
+  }
+
+  let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
+  //let sohmContract = wOHM.bind(Address.fromString(SOHM_ERC20_CONTRACT))
+
+  entity.wallet = address.toHex()
+  entity.ohmBalance = ohmContract.balanceOf(Address.fromString(address.toHex()))
+  //entity.sohmBalance = sohmContract.balanceOf(Address.fromString(address.toHex()))
+  entity.timestamp = timestamp
+  entity.address = address.toHex()
+  entity.save()
+  let hourBalance = createHourBalance(address, timestamp)
+  return entity as DailyBalance
+
+}
+
+export function createHourBalance(address: Bytes, timestamp: BigInt): HourBalance {
+
+  let number:i64 =Number.parseInt(timestamp.toString(),10) as i64;
+  number*=1000;
+  const date: Date = new Date( number);
+
+  let entity = HourBalance.load(`${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`)
+
+  if (!entity) {
+    entity = new HourBalance(`${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`)
+  }
+
+  let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
+
+  entity.dailyBalance = `${address.toHex()}-${getNumberDayFromDate(date).toString()}`
+  entity.ohmBalance = ohmContract.balanceOf(Address.fromString(address.toHex()))
+  entity.timestamp = timestamp
+  entity.save()
+
+  return entity as HourBalance
+
+}
 
 export function createWallet(address: Bytes, timestamp: BigInt, id: Bytes): void {
 
@@ -36,6 +84,14 @@ export function createWallet(address: Bytes, timestamp: BigInt, id: Bytes): void
   if (!entity) {
     entity = new Wallet(address.toHex())
     entity.birth = timestamp
+    let total = totalSupply.load('0')
+    if (!total) {
+      total = new totalSupply('0')
+      total.totalWallets = BigInt.fromI32(0)
+    }
+    let currentTotal = total.totalWallets
+    total.totalWallets = currentTotal + BigInt.fromI32(1)
+    total.save()
   }
 
   let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
@@ -46,7 +102,8 @@ export function createWallet(address: Bytes, timestamp: BigInt, id: Bytes): void
   entity.address = address.toHex()
   entity.save()
 
-  let balance = createBalance(address, timestamp, id)
+  //let balance = createBalance(address, timestamp, id)
+  let DailyBalance = createDailyBalance(address, timestamp)
 
 }
 
@@ -59,4 +116,11 @@ function toDecimal(
     .toBigDecimal();
 
   return value.divDecimal(precision);
+}
+
+function getNumberDayFromDate(date:Date): i64 {
+  const oneDay:number = 1000 * 60 * 60 * 24;
+  let supported=new Date(0);
+  supported.setUTCFullYear(date.getUTCFullYear());
+  return  Math.floor( Number.parseInt((date.getTime() -  supported.getTime()).toString()) /( oneDay )) as i64;
 }
