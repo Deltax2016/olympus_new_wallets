@@ -77,6 +77,29 @@ export function createHourBalance(address: Bytes, timestamp: BigInt): HourBalanc
 
 }
 
+export function createMinuteBalance(address: Bytes, timestamp: BigInt): MinuteBalance {
+
+  let number:i64 =Number.parseInt(timestamp.toString(),10) as i64;
+  number*=1000;
+  const date: Date = new Date( number);
+
+  let entity = MinuteBalance.load(`${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}-${date.getUTCMinutes().toString()}`)
+
+  if (!entity) {
+    entity = new MinuteBalance(`${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}-${date.getUTCMinutes().toString()}`)
+  }
+
+  let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
+
+  entity.hourBalance = `${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`
+  entity.ohmBalance = ohmContract.balanceOf(Address.fromString(address.toHex()))
+  entity.timestamp = timestamp
+  entity.save()
+
+  return entity as Minute
+
+}
+
 export function createWallet(address: Bytes, timestamp: BigInt, id: Bytes): void {
 
   let entity = Wallet.load(address.toHex())
