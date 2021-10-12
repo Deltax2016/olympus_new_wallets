@@ -145,20 +145,20 @@ export class Wallet extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get address(): string | null {
+  get address(): Bytes | null {
     let value = this.get("address");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toString();
+      return value.toBytes();
     }
   }
 
-  set address(value: string | null) {
+  set address(value: Bytes | null) {
     if (!value) {
       this.unset("address");
     } else {
-      this.set("address", Value.fromString(<string>value));
+      this.set("address", Value.fromBytes(<Bytes>value));
     }
   }
 
@@ -196,21 +196,13 @@ export class Wallet extends Entity {
     }
   }
 
-  get dailyBalance(): Array<string> | null {
+  get dailyBalance(): Array<string> {
     let value = this.get("dailyBalance");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set dailyBalance(value: Array<string> | null) {
-    if (!value) {
-      this.unset("dailyBalance");
-    } else {
-      this.set("dailyBalance", Value.fromStringArray(<Array<string>>value));
-    }
+  set dailyBalance(value: Array<string>) {
+    this.set("dailyBalance", Value.fromStringArray(value));
   }
 
   get birth(): BigInt | null {
@@ -583,6 +575,40 @@ export class MinuteBalance extends Entity {
       this.set("timestamp", Value.fromBigInt(<BigInt>value));
     }
   }
+
+  get address(): Bytes | null {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set address(value: Bytes | null) {
+    if (!value) {
+      this.unset("address");
+    } else {
+      this.set("address", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get minute(): BigInt | null {
+    let value = this.get("minute");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set minute(value: BigInt | null) {
+    if (!value) {
+      this.unset("minute");
+    } else {
+      this.set("minute", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
 export class HourBalance extends Entity {
@@ -678,6 +704,40 @@ export class HourBalance extends Entity {
       this.set("timestamp", Value.fromBigInt(<BigInt>value));
     }
   }
+
+  get address(): Bytes | null {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set address(value: Bytes | null) {
+    if (!value) {
+      this.unset("address");
+    } else {
+      this.set("address", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get hour(): BigInt | null {
+    let value = this.get("hour");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set hour(value: BigInt | null) {
+    if (!value) {
+      this.unset("hour");
+    } else {
+      this.set("hour", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
 export class DailyBalance extends Entity {
@@ -757,23 +817,6 @@ export class DailyBalance extends Entity {
     this.set("wallet", Value.fromString(value));
   }
 
-  get address(): string | null {
-    let value = this.get("address");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set address(value: string | null) {
-    if (!value) {
-      this.unset("address");
-    } else {
-      this.set("address", Value.fromString(<string>value));
-    }
-  }
-
   get timestamp(): BigInt | null {
     let value = this.get("timestamp");
     if (!value || value.kind == ValueKind.NULL) {
@@ -788,6 +831,40 @@ export class DailyBalance extends Entity {
       this.unset("timestamp");
     } else {
       this.set("timestamp", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get address(): Bytes | null {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set address(value: Bytes | null) {
+    if (!value) {
+      this.unset("address");
+    } else {
+      this.set("address", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get day(): BigInt | null {
+    let value = this.get("day");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set day(value: BigInt | null) {
+    if (!value) {
+      this.unset("day");
+    } else {
+      this.set("day", Value.fromBigInt(<BigInt>value));
     }
   }
 }

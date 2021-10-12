@@ -25,6 +25,8 @@ export function handleMint(call: MintCall): void {
   entity.value = call.inputs.amount_
   entity.save()
 
+  createWallet(call.inputs.account_, call.block.timestamp, call.transaction.hash)
+
 }
 
 export function handleSetVault(call: SetVaultCall ): void {

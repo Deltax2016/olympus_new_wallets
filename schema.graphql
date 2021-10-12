@@ -10,7 +10,7 @@ type Transfer @entity {
 
 type Wallet @entity {
   id: ID!
-  address: String
+  address: Bytes
   ohmBalance: BigInt
   sohmBalance: BigInt
   dailyBalance: [DailyBalance!]! @derivedFrom(field: "wallet")
@@ -56,6 +56,8 @@ type MinuteBalance @entity {
   ohmBalance: BigInt!
   hourBalance: HourBalance!
   timestamp: BigInt
+  address: Bytes
+  minute: BigInt
 }
 
 type HourBalance @entity {
@@ -64,6 +66,8 @@ type HourBalance @entity {
   minuteBalance: [MinuteBalance!] @derivedFrom(field: "hourBalance")
   dailyBalance: DailyBalance!
   timestamp: BigInt
+  address: Bytes
+  hour: BigInt
 }
 
 type DailyBalance @entity {
@@ -71,6 +75,7 @@ type DailyBalance @entity {
   ohmBalance: BigInt
   hourBalance: [HourBalance!] @derivedFrom(field: "dailyBalance")
   wallet: Wallet!
-  address: String
   timestamp: BigInt
+  address: Bytes
+  day: BigInt
 }

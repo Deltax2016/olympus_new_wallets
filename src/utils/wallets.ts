@@ -34,10 +34,10 @@ export function createDailyBalance(address: Bytes, timestamp: BigInt): DailyBala
   number*=1000;
   const date: Date = new Date( number);
 
-  let entity = DailyBalance.load(`${address.toHex()}-${getNumberDayFromDate(date).toString()}`)
+  let entity = DailyBalance.load(`${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date)}`)
 
   if (!entity) {
-    entity = new DailyBalance(`${address.toHex()}-${getNumberDayFromDate(date).toString()}`)
+    entity = new DailyBalance(`${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date)}`)
   }
 
   let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
@@ -47,7 +47,8 @@ export function createDailyBalance(address: Bytes, timestamp: BigInt): DailyBala
   entity.ohmBalance = ohmContract.balanceOf(Address.fromString(address.toHex()))
   //entity.sohmBalance = sohmContract.balanceOf(Address.fromString(address.toHex()))
   entity.timestamp = timestamp
-  entity.address = address.toHex()
+  entity.address = address
+  entity.day = BigInt.fromString(getNumberDayFromDate(date).toString())
   entity.save()
   let hourBalance = createHourBalance(address, timestamp)
   return entity as DailyBalance
@@ -60,18 +61,21 @@ export function createHourBalance(address: Bytes, timestamp: BigInt): HourBalanc
   number*=1000;
   const date: Date = new Date( number);
 
-  let entity = HourBalance.load(`${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`)
+  let entity = HourBalance.load(`${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`)
 
   if (!entity) {
-    entity = new HourBalance(`${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`)
+    entity = new HourBalance(`${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`)
   }
 
   let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
 
-  entity.dailyBalance = `${address.toHex()}-${getNumberDayFromDate(date).toString()}`
+  entity.dailyBalance = `${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date).toString()}`
   entity.ohmBalance = ohmContract.balanceOf(Address.fromString(address.toHex()))
   entity.timestamp = timestamp
+  entity.address = address
+  entity.hour = BigInt.fromI32(date.getUTCHours())
   entity.save()
+  let minuteBalance = createMinuteBalance(address, timestamp)
 
   return entity as HourBalance
 
@@ -83,20 +87,22 @@ export function createMinuteBalance(address: Bytes, timestamp: BigInt): MinuteBa
   number*=1000;
   const date: Date = new Date( number);
 
-  let entity = MinuteBalance.load(`${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}-${date.getUTCMinutes().toString()}`)
+  let entity = MinuteBalance.load(`${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}-${date.getUTCMinutes().toString()}`)
 
   if (!entity) {
-    entity = new MinuteBalance(`${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}-${date.getUTCMinutes().toString()}`)
+    entity = new MinuteBalance(`${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}-${date.getUTCMinutes().toString()}`)
   }
 
   let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
 
-  entity.hourBalance = `${address.toHex()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`
+  entity.hourBalance = `${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}`
   entity.ohmBalance = ohmContract.balanceOf(Address.fromString(address.toHex()))
   entity.timestamp = timestamp
+  entity.address = address
+  entity.minute = BigInt.fromI32(date.getUTCMinutes())
   entity.save()
 
-  return entity as Minute
+  return entity as MinuteBalance
 
 }
 
@@ -122,7 +128,7 @@ export function createWallet(address: Bytes, timestamp: BigInt, id: Bytes): void
 
   entity.ohmBalance = ohmContract.balanceOf(Address.fromString(address.toHex()))
   entity.sohmBalance = sohmContract.balanceOf(Address.fromString(address.toHex()))
-  entity.address = address.toHex()
+  entity.address = address
   entity.save()
 
   //let balance = createBalance(address, timestamp, id)
