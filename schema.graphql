@@ -48,6 +48,7 @@ type totalSupply @entity {
 
   id: ID!
   totalWallets: BigInt!
+  ohmBalance: BigInt!
 
 }
 

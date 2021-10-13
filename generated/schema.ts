@@ -468,6 +468,7 @@ export class totalSupply extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("totalWallets", Value.fromBigInt(BigInt.zero()));
+    this.set("ohmBalance", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -503,6 +504,15 @@ export class totalSupply extends Entity {
 
   set totalWallets(value: BigInt) {
     this.set("totalWallets", Value.fromBigInt(value));
+  }
+
+  get ohmBalance(): BigInt {
+    let value = this.get("ohmBalance");
+    return value!.toBigInt();
+  }
+
+  set ohmBalance(value: BigInt) {
+    this.set("ohmBalance", Value.fromBigInt(value));
   }
 }
 

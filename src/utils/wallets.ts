@@ -106,6 +106,21 @@ export function createMinuteBalance(address: Bytes, timestamp: BigInt): MinuteBa
 
 }
 
+export function createTotals(timestamp: BigInt): void {
+
+  let total = totalSupply.load('0')
+  if (!total) {
+    total = new totalSupply('0')
+    total.totalWallets = BigInt.fromI32(0)
+  }
+  let currentTotal = total.totalWallets
+  total.totalWallets = currentTotal + BigInt.fromI32(1)
+  let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
+  total.ohmBalance = ohmContract.balanceOf(Address.fromString(OHM_ERC20_CONTRACT))
+  total.save()
+
+}
+
 export function createWallet(address: Bytes, timestamp: BigInt, id: Bytes): void {
 
   let entity = Wallet.load(address.toHex())
@@ -113,19 +128,11 @@ export function createWallet(address: Bytes, timestamp: BigInt, id: Bytes): void
   if (!entity) {
     entity = new Wallet(address.toHex())
     entity.birth = timestamp
-    let total = totalSupply.load('0')
-    if (!total) {
-      total = new totalSupply('0')
-      total.totalWallets = BigInt.fromI32(0)
-    }
-    let currentTotal = total.totalWallets
-    total.totalWallets = currentTotal + BigInt.fromI32(1)
-    total.save()
+    createTotals(timestamp)
   }
 
   let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
   let sohmContract = wOHM.bind(Address.fromString(SOHM_ERC20_CONTRACT))
-
   entity.ohmBalance = ohmContract.balanceOf(Address.fromString(address.toHex()))
   entity.sohmBalance = sohmContract.balanceOf(Address.fromString(address.toHex()))
   entity.address = address
