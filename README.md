@@ -138,7 +138,7 @@ query = gql(
       wallets(first: 5) {
 	    id
 	    address
-	    sohmBalance
+	    ohmBalance
 	    dailyBalance {
 	      id
 	    }
