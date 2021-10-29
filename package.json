@@ -1,13 +1,13 @@
 {
-  "name": "olympus-wallets",
+  "name": "olympus-sohm",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ deltax2016/olympus-wallets",
-    "create-local": "graph create --node http://localhost:8020/ deltax2016/olympus-wallets",
-    "remove-local": "graph remove --node http://localhost:8020/ deltax2016/olympus-wallets",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 deltax2016/olympus-wallets"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ deltax2016/olympus-sohm",
+    "create-local": "graph create --node http://localhost:8020/ deltax2016/olympus-sohm",
+    "remove-local": "graph remove --node http://localhost:8020/ deltax2016/olympus-sohm",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 deltax2016/olympus-sohm"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.22.1",

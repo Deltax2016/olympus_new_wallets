@@ -3,7 +3,7 @@ type Transfer @entity {
   id: ID!
   from: Bytes
   to: Bytes
-  amount: BigInt
+  amount: BigDecimal
   timestamp: BigInt
 
 }
@@ -33,6 +33,14 @@ type Mint @entity {
 
   id: ID!
   address: Bytes
+  value: BigDecimal
+  timestamp: BigInt
+
+}
+
+type Burn @entity {
+
+  id: ID!
   value: BigInt
 
 }
@@ -41,6 +49,7 @@ type Minter @entity {
 
   id: ID!
   address: Bytes
+  timestamp: BigInt
 
 }
 
@@ -49,6 +58,8 @@ type totalSupply @entity {
   id: ID!
   totalWallets: BigInt!
   ohmBalance: BigInt!
+  day: BigInt
+  timestamp: BigInt
 
 }
 

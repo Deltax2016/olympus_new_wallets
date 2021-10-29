@@ -78,20 +78,20 @@ export class Transfer extends Entity {
     }
   }
 
-  get amount(): BigInt | null {
+  get amount(): BigDecimal | null {
     let value = this.get("amount");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBigInt();
+      return value.toBigDecimal();
     }
   }
 
-  set amount(value: BigInt | null) {
+  set amount(value: BigDecimal | null) {
     if (!value) {
       this.unset("amount");
     } else {
-      this.set("amount", Value.fromBigInt(<BigInt>value));
+      this.set("amount", Value.fromBigDecimal(<BigDecimal>value));
     }
   }
 
@@ -394,6 +394,73 @@ export class Mint extends Entity {
     }
   }
 
+  get value(): BigDecimal | null {
+    let value = this.get("value");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigDecimal();
+    }
+  }
+
+  set value(value: BigDecimal | null) {
+    if (!value) {
+      this.unset("value");
+    } else {
+      this.set("value", Value.fromBigDecimal(<BigDecimal>value));
+    }
+  }
+
+  get timestamp(): BigInt | null {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt | null) {
+    if (!value) {
+      this.unset("timestamp");
+    } else {
+      this.set("timestamp", Value.fromBigInt(<BigInt>value));
+    }
+  }
+}
+
+export class Burn extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Burn entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Burn entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Burn", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Burn | null {
+    return changetype<Burn | null>(store.get("Burn", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
   get value(): BigInt | null {
     let value = this.get("value");
     if (!value || value.kind == ValueKind.NULL) {
@@ -460,6 +527,23 @@ export class Minter extends Entity {
       this.set("address", Value.fromBytes(<Bytes>value));
     }
   }
+
+  get timestamp(): BigInt | null {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt | null) {
+    if (!value) {
+      this.unset("timestamp");
+    } else {
+      this.set("timestamp", Value.fromBigInt(<BigInt>value));
+    }
+  }
 }
 
 export class totalSupply extends Entity {
@@ -513,6 +597,40 @@ export class totalSupply extends Entity {
 
   set ohmBalance(value: BigInt) {
     this.set("ohmBalance", Value.fromBigInt(value));
+  }
+
+  get day(): BigInt | null {
+    let value = this.get("day");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set day(value: BigInt | null) {
+    if (!value) {
+      this.unset("day");
+    } else {
+      this.set("day", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get timestamp(): BigInt | null {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set timestamp(value: BigInt | null) {
+    if (!value) {
+      this.unset("timestamp");
+    } else {
+      this.set("timestamp", Value.fromBigInt(<BigInt>value));
+    }
   }
 }
 

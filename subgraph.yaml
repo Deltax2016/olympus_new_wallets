@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0x383518188c0c6d7730d91b2c03a03c837814a899"
       abi: wOHM
-      startBlock: 0
+      startBlock: 12014281
     mapping:
       kind: ethereum/event
       apiVersion: 0.0.5
@@ -16,6 +16,7 @@ dataSources:
       entities:
         - Transfer
         - Mint
+        - Burn
       abis:
         - name: wOHM
           file: ./abis/wOHM.json
@@ -25,6 +26,8 @@ dataSources:
       callHandlers:
         - function: mint(address,uint256)
           handler: handleMint
+        - function: burn(uint256)
+          handler: handleBurn
         - function: setVault(address)
           handler: handleSetVault
       file: ./src/mapping.ts

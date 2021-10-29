@@ -32,7 +32,7 @@ export function createDailyBalance(address: Bytes, timestamp: BigInt): DailyBala
 
   let number:i64 =Number.parseInt(timestamp.toString(),10) as i64;
   number*=1000;
-  const date: Date = new Date( number);
+  const date: Date = new Date(number);
 
   let entity = DailyBalance.load(`${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date)}`)
 
@@ -85,7 +85,7 @@ export function createMinuteBalance(address: Bytes, timestamp: BigInt): MinuteBa
 
   let number:i64 =Number.parseInt(timestamp.toString(),10) as i64;
   number*=1000;
-  const date: Date = new Date( number);
+  const date: Date = new Date(number);
 
   let entity = MinuteBalance.load(`${address.toHex()}-${date.getUTCFullYear()}-${getNumberDayFromDate(date).toString()}-${date.getUTCHours().toString()}-${date.getUTCMinutes().toString()}`)
 
@@ -106,18 +106,24 @@ export function createMinuteBalance(address: Bytes, timestamp: BigInt): MinuteBa
 
 }
 
-export function createTotals(timestamp: BigInt): void {
+export function createTotals(timestamp: BigInt): totalSupply {
 
-  let total = totalSupply.load('0')
+  let number:i64 =Number.parseInt(timestamp.toString(),10) as i64;
+  number*=1000;
+  const date: Date = new Date( number);
+
+  let total = totalSupply.load(`${date.getUTCFullYear()}-${getNumberDayFromDate(date)}`)
   if (!total) {
-    total = new totalSupply('0')
+    total = new totalSupply(`${date.getUTCFullYear()}-${getNumberDayFromDate(date)}`)
     total.totalWallets = BigInt.fromI32(0)
   }
   let currentTotal = total.totalWallets
+  total.day = BigInt.fromString(getNumberDayFromDate(date).toString())
+  total.timestamp = timestamp
   total.totalWallets = currentTotal + BigInt.fromI32(1)
-  let ohmContract = wOHM.bind(Address.fromString(OHM_ERC20_CONTRACT))
-  total.ohmBalance = ohmContract.balanceOf(Address.fromString(OHM_ERC20_CONTRACT))
   total.save()
+
+  return total as totalSupply
 
 }
 
