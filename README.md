@@ -61,7 +61,7 @@ type Burn @entity {
 
 ### Transfers
 
-Info about mints / burns:
+Info about transfers:
 - id - entity id
 - from - address of the recipient
 - to - address of the sender
